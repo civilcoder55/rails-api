@@ -13,7 +13,7 @@ module Api
 
       # GET /applications/:token/chats/:number/messages/:number
       def show
-        render json: MessagesRepresenter.new(@messages).as_json
+        render json: MessagesRepresenter.new(@message).as_json
       end
 
       # POST /applications/:token/chats/:number/messages
