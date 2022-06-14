@@ -18,11 +18,9 @@ module Api
 
       # POST /applications/:token/chats/
       def create
-
-        puts params
-        @chat = @application.chats.new number: (@application.chats_count + 1)
+        @chat = @application.chats.new number: @application.next_chat_number
         if @chat.save
-          @application.update chats_count: (@application.chats_count + 1)
+          @application.update chats_count: @application.current_chats_count
           render json: ChatsRepresenter.new(@chat).as_json, status: :created
         else
           render json: @chat.errors, status: :unprocessable_entity

@@ -18,9 +18,9 @@ module Api
 
       # POST /applications/:token/chats/:number/messages
       def create
-        @message = @chat.messages.new number: (@chat.messages_count + 1), body: params[:body]
+        @message = @chat.messages.new number: @chat.next_message_number, body: params[:body]
         if @message.save
-          @chat.update messages_count: (@chat.messages_count + 1)
+          @chat.update messages_count: @chat.current_messages_count
           render json: MessagesRepresenter.new(@message).as_json, status: :created
         else
           render json: @message.errors, status: :unprocessable_entity
@@ -42,7 +42,7 @@ module Api
       private
 
       def set_chat
-        @chat = Chat.joins(:application).where('applications.token' => params[:application_token])
+        @chat = Chat.includes(:application).where('applications.token' => params[:application_token])
                     .find_by! number: params[:chat_number]
       end
 
