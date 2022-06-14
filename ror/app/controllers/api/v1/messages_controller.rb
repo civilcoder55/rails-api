@@ -27,6 +27,18 @@ module Api
         end
       end
 
+      # GET /applications/:token/chats/:number/messages/search?query=
+      def search
+        if params[:query].presence
+          response = Message._search(params[:application_token],
+                                     params[:chat_number],
+                                     params[:query])
+          render json: MessagesRepresenter.new(response.results).as_json
+        else
+          render json: []
+        end
+      end
+
       private
 
       def set_chat
