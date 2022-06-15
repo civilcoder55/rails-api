@@ -18,9 +18,10 @@ module Api
 
       # POST /applications/:token/chats/:number/messages
       def create
-        @message = @chat.messages.new number: @chat.next_message_number, body: params[:body]
-        if @message.save
-          @chat.update messages_count: @chat.current_messages_count
+        @message = @chat.messages.new body: params[:body]
+        if @message.valid?
+          @message.number = @chat.next_message_number
+          StoreMessageWorker.perform_async(@message.to_json)
           render json: MessagesRepresenter.new(@message).as_json, status: :created
         else
           render json: @message.errors, status: :unprocessable_entity
