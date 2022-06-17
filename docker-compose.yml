@@ -68,6 +68,14 @@ services:
       - redis
       - ror
 
+  nginx:
+    image: nginx:alpine
+    container_name: insta-task-nginx
+    ports:
+      - 4000:80
+    volumes:
+      - ./docs:/usr/share/nginx/html/docs
+
 networks:
   network:
 
