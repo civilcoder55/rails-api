@@ -21,6 +21,7 @@ module Api
         @message = @chat.messages.new body: params[:body]
         if @message.valid?
           @message.number = @chat.next_message_number
+          @message.created_at = @message.updated_at = Time.now
           StoreMessageWorker.perform_async(@message.to_json)
           render json: MessagesRepresenter.new(@message).as_json, status: :created
         else

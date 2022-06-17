@@ -21,6 +21,7 @@ module Api
         @chat = @application.chats.new
         if @chat.valid?
           @chat.number = @application.next_chat_number
+          @chat.created_at = @chat.updated_at = Time.now
           StoreChatWorker.perform_async(@chat.to_json)
           render json: ChatsRepresenter.new(@chat).as_json, status: :created
         else
