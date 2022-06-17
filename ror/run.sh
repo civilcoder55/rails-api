@@ -12,9 +12,13 @@ while ! nc -z elasticsearch 9200 ; do
 done
 echo "ElasticSearch Server is ready"
 
-echo "Starting Migrating ..."
+echo "Syncing ElasticSearch ..."
+rails es:sync 
+echo "Syncing ElasticSearch finished"
+
+echo "Migrating Database ..."
 rails db:migrate
-echo "Migrating is finished"
+echo "Migrating Database finished"
 
 
 
