@@ -1,0 +1,78 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: insta-task-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "rails-api"
+    volumes:
+      - v-mysql:/var/lib/mysql
+    ports:
+      - 3311:3306
+    networks:
+      - network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+    container_name: insta-task-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - v-elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - network
+
+  redis:
+    image: redis:latest
+    container_name: insta-task-redis
+    volumes:
+      - v-redis:/data
+    networks:
+      - network
+
+  ror:
+    build: ./ror
+    container_name: insta-task-ror
+    image: insta-task-ror-image
+    volumes:
+      - ./ror:/usr/src/app
+    env_file:
+      - ./ror/.env
+    entrypoint:
+      - ./run.sh
+    ports:
+      - 3000:3000
+    networks:
+      - network
+    depends_on:
+      - mysql
+      - elasticsearch
+      - redis
+
+  worker:
+    image: insta-task-ror-image
+    container_name: insta-task-worker
+    volumes:
+      - ./ror:/usr/src/app
+    env_file:
+      - ./ror/.env
+    command: sidekiq
+    networks:
+      - network
+    depends_on:
+      - mysql
+      - elasticsearch
+      - redis
+      - ror
+
+networks:
+  network:
+
+
+volumes:
+  v-mysql:
+  v-elasticsearch:
+  v-redis:
