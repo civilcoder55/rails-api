@@ -5,22 +5,22 @@ class Message < ApplicationRecord
   # Relationships
   belongs_to :chat
 
-  # Elasticsearch
-  include Searchable
-
-  # Elasticsearch Mapping
-  settings @@elastic_search_settings do
-    mappings dynamic: false do
-      indexes :id, type: :integer, index: false
-      indexes :application_token, type: :keyword
-      indexes :chat_number, type: :keyword
-      indexes :number, type: :integer, index: false
-      indexes :body, type: :text, analyzer: :custom_analyzer
-      indexes :created_at, type: :date, index: false
-      indexes :updated_at, type: :date, index: false
+  unless Rails.env.test? # disable elastic on testing
+    # Elasticsearch
+    include Searchable
+    # Elasticsearch Mapping
+    settings @@elastic_search_settings do
+      mappings dynamic: false do
+        indexes :id, type: :integer, index: false
+        indexes :application_token, type: :keyword
+        indexes :chat_number, type: :keyword
+        indexes :number, type: :integer, index: false
+        indexes :body, type: :text, analyzer: :custom_analyzer
+        indexes :created_at, type: :date, index: false
+        indexes :updated_at, type: :date, index: false
+      end
     end
   end
-
   def as_indexed_json(_options = {})
     {
       id: id,

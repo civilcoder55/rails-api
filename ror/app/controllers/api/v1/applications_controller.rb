@@ -19,7 +19,7 @@ module Api
       def create
         @application = Application.new name: params[:name]
         if @application.save
-          render json: ApplicationsRepresenter.new(@application).as_json
+          render json: ApplicationsRepresenter.new(@application).as_json, status: :created
         else
           render json: @application.errors, status: :unprocessable_entity
         end
@@ -30,7 +30,7 @@ module Api
       def update
         @application.name = params[:name]
         if @application.save
-          render json: ApplicationsRepresenter.new(@application).to_json
+          render json: ApplicationsRepresenter.new(@application).as_json
         else
           render json: @application.errors, status: :unprocessable_entity
         end
