@@ -16,5 +16,8 @@ echo "Starting Migrating ..."
 rails db:migrate
 echo "Migrating is finished"
 
+
+
 echo "Starting Rails Server ..."
+rm -f ./tmp/pids/server.pid
 rails server -b 0.0.0.0
