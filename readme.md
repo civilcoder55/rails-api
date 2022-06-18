@@ -4,7 +4,7 @@
   <h3 align="center">Rails API</h3>
 
   <p align="center">
-    Intabug chat API (BE Engineer challenge).
+    Instabug chat API (BE Engineer challenge).
   </p>
 </p>
 
@@ -85,12 +85,12 @@ sudo docker run --rm -it insta-task-ror-image rspec
 
 
 <p align="center">
-  <img src="screenshots/2.png" width="1920" height="800">
+  <img src="screenshots/2.png">
 </p>
 
 ## break down the task requirements
 
-- applications tokens :
+- for applications tokens :
 
   - used SHA1 hash with random string + timestamp to ensure uniqueness .
 
@@ -109,7 +109,7 @@ sudo docker run --rm -it insta-task-ror-image rspec
     <img src="screenshots/3.png" width="500" height="300">
   </p>
 
-- for identifies the application by its token and the chat by its number along with the application token
+- for identifying the application by its token and the chat by its number along with the application token
 
   - i used nested resource to achieve this "/api/v1/applications/:token/chats/:number"
 
@@ -132,7 +132,7 @@ sudo docker run --rm -it insta-task-ror-image rspec
   </p>
 
 - to avoid writing directly to MySQL
-  - i used queuing systme to push write operations to, and a sidekiq worker to consume and do writes
+  - i used queuing systme to push write operations to, and a sidekiq worker to consume and do writes,
     for queuing we can use any queuing system like rabbitmq,sqs,redis - i choosed redis
 - for updating counts in database
 
@@ -140,8 +140,9 @@ sudo docker run --rm -it insta-task-ror-image rspec
 
 - i didn't implement pagination but for this i will go for cursor pagination because it perform better than offset
 
-- for indexes i added index for application token and composite index for application foriegnkey + number for chats and
-  messages
+- database indexing
+  - i added index for application token 
+  - composite index for (application foriegn key + number) for chats and messages
 
 ## Built With
 
