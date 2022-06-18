@@ -1,4 +1,3 @@
 update_counts_job:
-  cron: "*/15 * * * * "
+  cron: "*/15 * * * *"
   class: "UpdateCountsWorker"
-  queue: "counter_updater"
